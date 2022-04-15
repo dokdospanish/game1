@@ -1,0 +1,396 @@
+/* Reset */ html { box-sizing: border-box } *, *:before, *:after { box-sizing: inherit } body { margin: 0 }
+
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: sans-serif;
+  /* font-size: clamp(0.7rem, 2.5vmin, 1.5rem); */ /* responsive font (Use em's) */
+  font-size: clamp(0.9rem, 2.8vmin, 1.5rem);
+}
+
+button {
+  font-size: inherit; /* for responsiveness (not default) */
+  /* Reset */ border: 0; padding: none; cursor: pointer; user-select: none;
+}
+
+header {
+  /* font-family: 'Ultra', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+  font-family: 'Black Han Sans', sans-serif;
+  font-weight: 400;
+  font-size: 1.8em;
+  border-bottom: #d3d6da solid 1px;
+  padding: 0 0.3em;
+
+  flex: 0, 0, auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header>span {
+  /* 토픽클 */
+  /* Fix 'Black Han Sans' font line height*/
+  margin-top: 0.2em;
+}
+
+.center-horizontal {
+  flex: 0, 0, auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-center-wrap {
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  }
+
+.top {
+  min-height: 0; /* Make last scrollable */
+  display: flex;
+  flex-direction: column;
+  flex: 1, 1, auto;
+}    
+
+#letterboard {
+  /* background-color: lightgoldenrodyellow; */
+  padding-top: 2em;
+  position: relative;
+}
+
+/* ------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------- */
+
+.scrollable-flex {
+  /* Parent needs min-height: 0;*/
+  flex: 1;
+  min-height:0;
+  overflow-y:scroll;
+}
+
+#history-board {
+  position: relative;
+  overscroll-behavior-y: contain;
+}
+
+#history-board > * {
+  padding-bottom: 0.7rem;
+}
+
+/* Bottom BLURRER */
+#history-board::after {
+  content: '';
+  display: block;
+  position: sticky;
+  bottom: -0.1em;
+  height: 3rem;
+  /* background-color: rgba(255, 0, 0, 0.199); */
+  background-image: linear-gradient(to top, rgb(255, 255, 255, 1), rgba(255, 0, 0, 0));
+}
+
+  /* Top BLURRER (animated by JS) */ 
+#history-board::before {
+  content: '';
+  display: block;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 0.7rem; /* Match [ #history-board > * ]  */
+  transform: translateY(0%), scaleY(50%);
+  background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgba(255, 0, 0, 0));
+}
+
+
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------------- */
+
+.word-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.syllable-container {
+  flex: 0 0 auto;
+  border: #d3d6da solid 0.06em;
+  background-color: #d3d6da;
+  height: 6em;
+  width: 6em;
+  display: grid;
+  justify-items: stretch; 
+  transition: transform 250ms;
+}
+
+.shake {
+  animation: shake 250ms ease-in-out;
+}
+@keyframes shake {
+  10% { transform: translateX(-5%) }
+  30% { transform: translateX(5%) }
+  50% { transform: translateX(-7.5%) }
+  70% { transform: translateX(7.5%) }
+  90% { transform: translateX(5%) }
+  100% { transform: translateX(0%) }
+}
+
+.flip {
+  /* Depends on element having a transition: transform... */
+  transform: rotateX(90deg);
+}
+
+.bounce {
+  animation: bounce 700ms /* infinite */ ease-in-out;
+}
+@keyframes bounce {
+  20% { transform: translateY(-50%) }
+  40% { transform: translateY(5%) }
+  60% { transform: translateY(-25%) }
+  80% { transform: translateY(2.5%) }
+  90% { transform: translateY(-5%) }
+  100% { transform: translateY(0%) }
+}
+
+.tile {
+  user-select: none;
+  border: #d3d6da solid 0.06em;
+  background-color: /* #fff */ hsl( /* #d3d6da */
+    var(--hue, 360),
+    var(--sat, 100%),
+    calc(var(--light, 100%) + var(--extra-light, 0%))
+  );
+  font-size: 1.9em;
+  display: flex;
+  padding-bottom: 0.1em;
+  align-items: center;
+  justify-content: center;
+}
+
+.focused {
+  border: #787c7e solid 0.06em;
+  box-shadow: 0 0 0.1em #787c7e;
+  animation: blink-animation 1.2s ease-in-out infinite;
+}
+@keyframes blink-animation {
+  to {
+    border: #d3d6da solid 0.06em;
+    box-shadow: none;
+  }
+}
+
+/* ------------------------- */
+/* ------------------------- */
+  .bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex: 0, 0, auto;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------------- */
+
+
+.keyboard {
+  flex: 0, 0, auto;
+  padding: 0.5em 0.5em;
+  display: grid;
+  grid-template-columns: repeat(20, minmax(auto, 1.25em)); /* 2.5em width (considering span 2), but allow shrinking */
+  /* grid-auto-rows: 3em; */ /* Implicit rows => Explicit top (smaller size double letters) */
+  grid-template-rows: 1.5em 2.5em 2.5em 2.5em;
+  gap: 0.25em;
+  justify-content: center;
+}
+
+.key {
+  /* Depends on above button reset */
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25em;
+  background-color: hsl( /* #d3d6da */
+    var(--hue, 214),
+    var(--sat, 9%),
+    calc(var(--light, 84%) + var(--extra-light, 0%))
+  );
+}
+
+.key.one-and-a-half {
+  grid-column: span 3;
+}
+
+.key.shift {
+  color: black;
+  --sat: 0%;
+  --light: 95%;
+}
+
+.key:hover {
+  --extra-light: 10%;
+}
+
+/* IMPORTANT: .correct should be BELOW .present, itself BELOW .absent, as key classes are never removed */
+/* i.e. A "correct" key could have a class="correct present absent", where 'correct' should override the other two */
+/* ALSO: shared by keys and tiles */
+.absent {
+  color: #fff;
+  --hue: 214;
+  --sat: 9%;
+  --light: 48%;
+}
+.present {
+  color: #fff;
+  --hue: 49;
+  --sat: 51%;
+  --light: 57%;
+}
+.correct {
+  color: #fff;
+  --hue: 115;
+  --sat: 29%;
+  --light: 53%;
+}
+
+/* Temprarily hide resut until animation finishes: */
+.key.masked {
+  color: #000;
+  --hue: 214;
+  --sat: 9%;
+  --light: 84%;
+}
+.tile.masked {
+  color: #000;
+  background-color: #fff;
+}
+
+#popup {
+  z-index: 99;
+  user-select: none;
+  visibility: hidden;
+  position: absolute;
+  top: 16vh;
+  left: 50vw;
+  color: #fff;
+  background-color: #000;
+  border-radius: 0.5em;
+  padding: 1em;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+dialog {
+  z-index: 100;
+  max-width: 40ch;
+  max-height: 90%;
+  border-radius: 0.5em;
+  border: none;
+  box-shadow: 0 0 1.5em #939598;
+  font-size: 1.3em;
+  padding: 0 1.5em 1.5em 1.5em;
+}
+
+dialog::backdrop {
+  background-color: #d3d6da50;
+}
+
+dialog h1, dialog h2, dialog h3, dialog h4 {
+  text-align: center;
+}
+
+dialog h1 {
+  padding-top: 0.5em;
+}
+
+dialog h3 {
+  font-size: 0.8em;
+  /* border-bottom: #d3d6da solid 1px; */
+}
+
+.dialog-inner-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-inner-wrap .content {
+  overflow: auto;
+}
+
+dialog button {
+  color: #fff;
+  background-color: rgb(0, 0, 0);
+  border-radius: 0.8em;
+  padding: 0.3em;
+}
+
+dialog button:hover {
+  background-color: #333333;
+}
+
+dialog button:focus {
+  border: none;
+}
+
+i {
+  cursor: pointer;
+}
+
+.help.tile {
+  font-size: 1.5em;
+  max-width: 0.8em;
+}
+
+a:link, a:visited { color: #538d4e; } /* darker green */
+a:hover, a:focus, a:active { color: #6aaa64 }
+
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------------- */
+.custom-scrollbar {
+scrollbar-gutter: stable both-edges;
+  /* FOR FIREFOX (::-webkit-scrollbar not supported) */
+  scrollbar-color: #d3d6da transparent;
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 1em;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  position: absolute;
+  right: -3rem;
+  top: -50em;
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d3d6da;
+  border: 5px solid #fff;
+  border-radius: 0.8em;
+  max-height: 0.2em;
+}
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------------------------------- */
+
+@media (max-aspect-ratio: 3/4) {
+    .top { padding-top: 5rem; }
+    .keyboard { grid-template-rows: 2.5em 4em 4em 4em; }
+  }
+
+@media (min-aspect-ratio: 3/4) and (max-aspect-ratio: 1/1) {
+  .top { padding-top: 2rem; }
+}

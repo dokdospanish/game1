@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topikle</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Ultra&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+<dialog id="congrats">
+  <div class="dialog-inner-wrap">
+    <i class="fas fa-times" onclick="congrats.close()" style="position: absolute; top: 0.5em; right: 0.5em; color: #939598;"></i>
+    <section class="title">
+      <h1 style="margin-bottom: 0;">🎊 축하합니다! 🎊</h1>
+    </section>
+    <section class="content custom-scrollbar">
+      <div style="display: flex; flex-direction: column; align-items: center; font-size: 0.7em;">
+        <h2 style="margin-bottom: 0;">도전 횟수:</h2>
+        <span id="counter-div" style="font-size:10em; line-height: 1; padding-top: 0.1em; overflow-y: hidden;"></span>
+        <h2 style="display: none;" id="try-tries"></h2>
+      </div>
+    </section>
+    <br/>
+    <button onclick="congrats.close();play()" style="margin-bottom: 0.5em;">다시 하기</button>
+    <a href="https://www.naver.com" target="_blank" style="font-size: 0.7em; text-align: center;">See meaning in English</a>
+  </div>
+</dialog>
+<dialog id="help">
+  <i class="fas fa-times fa-xs" onclick="closeHelp()" style="position: absolute; top: 0.7em; right: 0.7em; color: #939598;"></i>
+  <div class="dialog-inner-wrap">
+    <h3>단어를 추측해보세요</h3>
+    <section class="content custom-scrollbar" style="padding-bottom: 1em;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; font-size: 0.7em;">
+        <article style="display: flex; flex-direction: row; align-items: center; padding-bottom: 0.5em;">
+        <div class="tile absent">ㄱ</div>&nbsp;&nbsp;<span>단어에 없는 문자</span>
+        </article>
+        <article style="display: flex; flex-direction: row; align-items: center; padding-bottom: 0.5em;">
+        <div class="tile present">ㄱ</div>&nbsp;&nbsp;<span>단어에는 있지만 위치가 다른 문자</span>
+        </article>
+        <article style="display: flex; flex-direction: row; align-items: center; padding-bottom: 0.5em;">
+          <div class="tile correct">ㄱ</div>&nbsp;&nbsp;<span>알맞은 위치에 있는 문자</span>
+        </article>
+      </div>
+    </section>
+    <section class="content custom-scrollbar">
+      <div style="display: flex; flex-direction: column; align-items: center; font-size: 0.7em;">
+        <div>모든 단어는 기본형입니다</div>
+        <div style="width: 100%;display: flex; flex-direction: row; justify-content: space-around; ">
+          <article style="padding: 1em 0; display: flex; flex-direction: row; align-items: center;">
+            <div class="tile help" style="border-right: none;">ㅎ</div><div class="tile help">ㅐ</div>&#8201;
+            <div class="tile help" style="border-right: none;">ㅅ</div><div class="tile help">ㅓ</div>
+            <span style="color:red; padding-left: 0.3em;">✖</span>
+          </article>
+          <article style="display: flex; flex-direction: row; align-items: center;">
+            <div class="tile help" style="border-right: none;">ㅎ</div><div class="tile help">ㅏ</div>&#8201;
+            <div class="tile help" style="border-right: none;">ㄷ</div><div class="tile help">ㅏ</div>
+            <span style="color:green; padding-left: 0.3em;">✔</span>
+          </article>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; font-size: 0.7em;">
+        <div>쌍자음은 한 문자입니다</div>
+        <div style="width: 100%;display: flex; flex-direction: row; justify-content: space-around; ">
+          <article style="padding: 1em 0; display: flex; flex-direction: row; align-items: center;">
+            <div class="tile help" style="border-right: none;">ㅅ</div><div class="tile help">ㅅ</div>
+            <span style="color:red; padding-left: 0.3em;">✖</span>
+          </article>
+          <article style="display: flex; flex-direction: row; align-items: center;">
+            <div class="tile help" style="padding: 0 0.7em;">ㅆ</div>
+            <span style="color:green; padding-left: 0.3em;">✔</span>
+          </article>
+        </div>
+    </section>
+    <br/>
+    <button id="close-help-button" onclick="closeHelp()" tabindex="1">시작</button>
+  </div>
+</dialog>
+<header>
+  <div style="padding-right: 1.5em;" onclick="help.showModal()"><i class="far fa-question-circle fa-xs"></i></div>
+  <span>토픽클</span>
+  <div>
+    <i class="fas fa-sync fa-xs" onclick="play()" style="padding-right: 0.5em; cursor: pointer;"></i>
+    <i style="display: none;" class="fas fa-cog fa-xs"></i>
+  </div>
+</header>
+<div class="game-center-wrap">
+  <div class="game">
+    <div class="top">
+      <div id="popup"></div>
+      <div id="letterboard" class="center-horizontal">
+        <div id="input-area" class="word-container"></div>
+      </div>
+      <div id="history-board" class="scrollable-flex custom-scrollbar">
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div id="keyboard" class="keyboard">
+        
+        <button class="key letter" data-key="ㅃ" tabindex="-1">ㅃ</button>
+        <button class="key letter" data-key="ㅉ" tabindex="-1">ㅉ</button>
+        <button class="key letter" data-key="ㄸ" tabindex="-1">ㄸ</button>
+        <button class="key letter" data-key="ㄲ" tabindex="-1">ㄲ</button>
+        <button class="key letter" data-key="ㅆ" tabindex="-1">ㅆ</button>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <button class="key letter" data-key="ㅒ" tabindex="-1">ㅒ</button>
+        <button class="key letter" data-key="ㅖ" tabindex="-1">ㅖ</button>
+
+        <button class="key letter" data-key="ㅂ" tabindex="-1">ㅂ</button>
+        <button class="key letter" data-key="ㅈ" tabindex="-1">ㅈ</button>
+        <button class="key letter" data-key="ㄷ" tabindex="-1">ㄷ</button>
+        <button class="key letter" data-key="ㄱ" tabindex="-1">ㄱ</button>
+        <button class="key letter" data-key="ㅅ" tabindex="-1">ㅅ</button>
+        <button class="key letter" data-key="ㅛ" tabindex="-1">ㅛ</button>
+        <button class="key letter" data-key="ㅕ" tabindex="-1">ㅕ</button>
+        <button class="key letter" data-key="ㅑ" tabindex="-1">ㅑ</button>
+        <button class="key letter" data-key="ㅐ" tabindex="-1">ㅐ</button>
+        <button class="key letter"data-key="ㅔ" tabindex="-1">ㅔ</button>
+
+        <div class="spacer"></div>
+        <button class="key letter" data-key="ㅁ" tabindex="-1">ㅁ</button>
+        <button class="key letter" data-key="ㄴ" tabindex="-1">ㄴ</button>
+        <button class="key letter" data-key="ㅇ" tabindex="-1">ㅇ</button>
+        <button class="key letter" data-key="ㄹ" tabindex="-1">ㄹ</button>
+        <button class="key letter" data-key="ㅎ" tabindex="-1">ㅎ</button>
+        <button class="key letter" data-key="ㅗ" tabindex="-1">ㅗ</button>
+        <button class="key letter" data-key="ㅓ" tabindex="-1">ㅓ</button>
+        <button class="key letter" data-key="ㅏ" tabindex="-1">ㅏ</button>
+        <button class="key letter" data-key="ㅣ" tabindex="-1">ㅣ</button>
+        <div class="spacer"></div>
+        
+        <button class="key one-and-a-half" data-key="↵" tabindex="-1"><i data-key="↵" class="fas fa-check fa-xl"></i></button>
+        <button class="key letter" data-key="ㅋ" tabindex="-1">ㅋ</button>
+        <button class="key letter" data-key="ㅌ" tabindex="-1">ㅌ</button>
+        <button class="key letter" data-key="ㅊ" tabindex="-1">ㅊ</button>
+        <button class="key letter" data-key="ㅍ" tabindex="-1">ㅍ</button>
+        <button class="key letter" data-key="ㅠ" tabindex="-1">ㅠ</button>
+        <button class="key letter" data-key="ㅜ" tabindex="-1">ㅜ</button>
+        <button class="key letter" data-key="ㅡ" tabindex="-1">ㅡ</button>
+        <button class="key one-and-a-half" data-key="←" tabindex="-1"><i data-key="←" class="fas fa-backspace"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
