@@ -251,8 +251,10 @@ header>span {
   --light: 95%;
 }
 
-.key:hover {
-  --extra-light: 10%;
+@media (hover: hover) { /* Hover effect only if mouse is primary input device */
+  .key:hover {
+    --extra-light: 10%;
+  }
 }
 
 /* IMPORTANT: .correct should be BELOW .present, itself BELOW .absent, as key classes are never removed */
