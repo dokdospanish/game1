@@ -18,6 +18,11 @@ button {
   /* Reset */ border: 0; padding: none; cursor: pointer; user-select: none;
 }
 
+button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 header {
   /* font-family: 'Ultra', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
   font-family: 'Black Han Sans', sans-serif;
