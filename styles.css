@@ -23,6 +23,11 @@ button:focus {
   box-shadow: none;
 }
 
+button { /* No mobile key highlight */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent; /* For some Androids */
+}
+
 header {
   /* font-family: 'Ultra', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
   font-family: 'Black Han Sans', sans-serif;
