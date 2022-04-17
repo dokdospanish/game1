@@ -14,24 +14,6 @@
   <script src="game.js" defer></script>
 </head>
 <body>
-<dialog id="congrats">
-  <div class="dialog-inner-wrap">
-    <i class="fas fa-times" onclick="congrats.close()" style="position: absolute; top: 0.5em; right: 0.5em; color: #939598;"></i>
-    <section class="title">
-      <h1 style="margin-bottom: 0;">🎊 축하합니다! 🎊</h1>
-    </section>
-    <section class="content custom-scrollbar">
-      <div style="display: flex; flex-direction: column; align-items: center; font-size: 0.7em;">
-        <h2 style="margin-bottom: 0;">도전 횟수:</h2>
-        <span id="counter-div" style="font-size:10em; line-height: 1; padding-top: 0.1em; overflow-y: hidden;"></span>
-        <h2 style="display: none;" id="try-tries"></h2>
-      </div>
-    </section>
-    <br/>
-    <button onclick="congrats.close();play()" style="margin-bottom: 0.5em;">다시 하기</button>
-    <a href="https://www.naver.com" target="_blank" style="font-size: 0.7em; text-align: center; padding-top: 0.5em;">See meaning in English</a>
-  </div>
-</dialog>
 <dialog id="help">
   <i class="fas fa-times fa-xs" onclick="closeHelp()" style="position: absolute; top: 0.7em; right: 0.7em; color: #939598;"></i>
   <div class="dialog-inner-wrap">
@@ -82,12 +64,80 @@
     <button id="close-help-button" onclick="closeHelp()" tabindex="1">시작</button>
   </div>
 </dialog>
+
+
+<dialog id="congrats">
+  <div class="dialog-inner-wrap">
+    <i class="fas fa-times" onclick="congrats.close()" style="position: absolute; top: 0.5em; right: 0.5em; color: #939598;"></i>
+    <section class="title">
+      <h1 style="margin-bottom: 0;">🎊 축하합니다! 🎊</h1>
+    </section>
+    <section class="content custom-scrollbar">
+      <div style="display: flex; flex-direction: column; align-items: center; font-size: 0.7em;">
+        <h2 style="margin-bottom: 0;">도전 횟수:</h2>
+        <span id="counter-div" style="font-size:10em; line-height: 1; padding-top: 0.1em; overflow-y: hidden;"></span>
+        <h2 style="display: none;" id="try-tries"></h2>
+      </div>
+    </section>
+    <br/>
+    <button onclick="congrats.close();play()" style="margin-bottom: 0.5em;">다시 하기</button>
+    <a href="https://www.naver.com" target="_blank" style="font-size: 0.7em; text-align: center; padding-top: 0.5em;">See meaning in English</a>
+  </div>
+</dialog>
+
+<dialog id="settings">
+  <div class="dialog-inner-wrap">
+    <i class="fas fa-times" onclick="settings.close()" style="position: absolute; top: 0.5em; right: 0.5em; color: #939598;"></i>
+    <section class="title">
+       <h2 style="margin-bottom: 0; font-size: 1em;">설정</h2>
+    </section>
+    <section class="content custom-scrollbar" style="font-size: 0.8em">
+      <div style="border-bottom: #d3d6da solid 1px; padding-bottom: 1em;">
+        <div style="margin-top: 1em;">
+          <input type="radio" name="level" id="beginner" checked>
+          <label for="beginner">I'm learning Korean</label>
+        </div>
+        <div>
+          <input type="radio" name="level" id="advanced">
+          <label for="advanced">한국어 원어민</label>
+        </div>
+      </div>
+      <div style="padding-top: 1em; min-width: 28ch;">
+        <label for="maxTries">최대 도전 기회:&nbsp;</label>
+        <input type="range" id="maxTries" name="maxTries"
+               value="5" min="1" max="10" step="1"
+               oninput="this.nextSibling.textContent = this.value">
+        5
+      </div>
+    </section>
+  </div>
+</dialog>
+
+
+<dialog id="sorry">
+  <div class="dialog-inner-wrap">
+    <i class="fas fa-times" onclick="sorry.close()" style="position: absolute; top: 0.5em; right: 0.5em; color: #939598;"></i>
+    <section class="title">
+       <h2 style="margin-bottom: 0; font-size: 1em;">정답:</h2>
+    </section>
+    <section class="content custom-scrollbar">
+      <h1></h1>
+    </section>
+    <br/>
+    <button onclick="sorry.close();play()" style="margin-bottom: 0.5em;">다시 하기</button>
+    <a href="https://www.naver.com" target="_blank" style="font-size: 0.7em; text-align: center; padding-top: 0.5em;">See meaning in English</a>
+  </div>
+</dialog>
+
+
 <header>
-  <div style="padding-right: 1.5em;" onclick="help.showModal()"><i class="far fa-question-circle fa-xs"></i></div>
-  <span>토픽클</span>
+  <div style="padding-right: 1.5em;">
+    <i class="far fa-question-circle fa-xs" onclick="help.showModal()"></i>
+    <i class="fas fa-cog fa-xs" onclick="stopInteractivity(); settings.showModal()""></i>
+  </div>
+  <span style="padding-right:2.2em;">토픽클</span>
   <div>
-    <i class="fas fa-sync fa-xs" onclick="play()" style="padding-right: 0.5em; cursor: pointer;"></i>
-    <i style="display: none;" class="fas fa-cog fa-xs"></i>
+    <i class="fas fa-sync fa-xs" onclick="play()" style="padding-right: 0.5em"></i>
   </div>
 </header>
 <div class="game-center-wrap">
